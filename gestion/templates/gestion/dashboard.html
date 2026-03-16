@@ -1,0 +1,67 @@
+{% extends 'gestion/base.html' %}
+{% block titulo %}Dashboard{% endblock %}
+
+{% block contenido %}
+<h2 class="mb-4">📊 Dashboard</h2>
+
+<!-- TARJETAS DE RESUMEN -->
+<div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Clientes</div>
+                        <div class="fs-3 fw-bold">{{ total_clientes }}</div>
+                    </div>
+                    <i class="bi bi-people fs-1 text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Vehículos</div>
+                        <div class="fs-3 fw-bold">{{ total_vehiculos }}</div>
+                    </div>
+                    <i class="bi bi-car-front fs-1 text-success"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Servicios Hoy</div>
+                        <div class="fs-3 fw-bold">{{ servicios_hoy }}</div>
+                    </div>
+                    <i class="bi bi-clipboard-check fs-1 text-warning"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Ingresos Hoy</div>
+                        <div class="fs-3 fw-bold">${{ ingresos_hoy }}</div>
+                    </div>
+                    <i class="bi bi-cash-coin fs-1 text-danger"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
