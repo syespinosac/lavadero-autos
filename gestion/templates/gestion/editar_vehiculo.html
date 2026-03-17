@@ -1,0 +1,64 @@
+{% extends 'gestion/base.html' %}
+{% block titulo %}Editar Vehículo{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>✏️ Editar Vehículo</h2>
+    <a href="{% url 'lista_vehiculos' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left me-2"></i>Volver
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width: 600px;">
+    <div class="card-body p-4">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Cliente Dueño</label>
+                <select name="cliente" class="form-select" required>
+                    {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}"
+                        {% if cliente.id == vehiculo.cliente.id %}selected{% endif %}>
+                        {{ cliente.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Placa</label>
+                <input type="text" name="placa" class="form-control"
+                       value="{{ vehiculo.placa }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Marca</label>
+                <input type="text" name="marca" class="form-control"
+                       value="{{ vehiculo.marca }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Color</label>
+                <input type="text" name="color" class="form-control"
+                       value="{{ vehiculo.color }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tipo</label>
+                <select name="tipo" class="form-select" required>
+                    <option value="sedan"  {% if vehiculo.tipo == 'sedan'  %}selected{% endif %}>Sedán</option>
+                    <option value="suv"    {% if vehiculo.tipo == 'suv'    %}selected{% endif %}>SUV</option>
+                    <option value="moto"   {% if vehiculo.tipo == 'moto'   %}selected{% endif %}>Moto</option>
+                    <option value="camion" {% if vehiculo.tipo == 'camion' %}selected{% endif %}>Camión</option>
+                    <option value="otro"   {% if vehiculo.tipo == 'otro'   %}selected{% endif %}>Otro</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100">
+                <i class="bi bi-save me-2"></i>Actualizar Vehículo
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,11 +1,11 @@
 {% extends 'gestion/base.html' %}
-{% block titulo %}Clientes{% endblock %}
+{% block titulo %}Vehículos{% endblock %}
 
 {% block contenido %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>👥 Clientes</h2>
-    <a href="{% url 'nuevo_cliente' %}" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-2"></i>Nuevo Cliente
+    <h2>🚗 Vehículos</h2>
+    <a href="{% url 'nuevo_vehiculo' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-2"></i>Nuevo Vehículo
     </a>
 </div>
 
@@ -15,36 +15,41 @@
             <thead class="table-dark">
                 <tr>
                     <th>#</th>
-                    <th>Nombre</th>
-                    <th>Teléfono</th>
-                    <th>Email</th>
-                    <th>Fecha Registro</th>
+                    <th>Placa</th>
+                    <th>Marca</th>
+                    <th>Color</th>
+                    <th>Tipo</th>
+                    <th>Cliente Dueño</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                {% for cliente in clientes %}
+                {% for vehiculo in vehiculos %}
                 <tr>
-                    <td>{{ cliente.id }}</td>
-                    <td>{{ cliente.nombre }}</td>
-                    <td>{{ cliente.telefono }}</td>
-                    <td>{{ cliente.email }}</td>
-                    <td>{{ cliente.fecha_registro|date:"d/m/Y" }}</td>
+                    <td>{{ vehiculo.id }}</td>
+                    <td><span class="badge bg-dark">{{ vehiculo.placa }}</span></td>
+                    <td>{{ vehiculo.marca }}</td>
+                    <td>{{ vehiculo.color }}</td>
+                    <td>{{ vehiculo.get_tipo_display }}</td>
                     <td>
-                            <a href="{% url 'editar_cliente' cliente.id %}" 
-                            class="btn btn-sm btn-warning">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <button onclick="confirmarEliminar('{% url 'eliminar_cliente' cliente.id %}')"
-                                    class="btn btn-sm btn-danger">
-                                <i class="bi bi-trash"></i>
-                            </button>
+                        <i class="bi bi-person me-1"></i>
+                        {{ vehiculo.cliente.nombre }}
                     </td>
+                    <td>
+                            <a href="{% url 'editar_vehiculo' vehiculo.id %}"
+                            class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i>
+                            </a>
+                            <button onclick="confirmarEliminar('{% url 'eliminar_vehiculo' vehiculo.id %}')"
+                                    class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="text-center text-muted">
-                        No hay clientes registrados aún
+                    <td colspan="7" class="text-center text-muted">
+                        No hay vehículos registrados aún
                     </td>
                 </tr>
                 {% endfor %}
@@ -72,6 +77,3 @@ function confirmarEliminar(url) {
 }
 </script>
 {% endblock %}
-
-
-

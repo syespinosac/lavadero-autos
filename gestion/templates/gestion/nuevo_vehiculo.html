@@ -1,0 +1,62 @@
+{% extends 'gestion/base.html' %}
+{% block titulo %}Nuevo Vehículo{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>➕ Nuevo Vehículo</h2>
+    <a href="{% url 'lista_vehiculos' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left me-2"></i>Volver
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width: 600px;">
+    <div class="card-body p-4">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Cliente Dueño</label>
+                <select name="cliente" class="form-select" required>
+                    <option value="">Selecciona un cliente...</option>
+                    {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Placa</label>
+                <input type="text" name="placa" class="form-control"
+                       placeholder="Ej: ABC123" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Marca</label>
+                <input type="text" name="marca" class="form-control"
+                       placeholder="Ej: Toyota" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Color</label>
+                <input type="text" name="color" class="form-control"
+                       placeholder="Ej: Rojo" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tipo</label>
+                <select name="tipo" class="form-select" required>
+                    <option value="sedan">Sedán</option>
+                    <option value="suv">SUV</option>
+                    <option value="moto">Moto</option>
+                    <option value="camion">Camión</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-save me-2"></i>Guardar Vehículo
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
