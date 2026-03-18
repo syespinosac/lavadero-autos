@@ -24,7 +24,12 @@ class Usuario(models.Model):
 # TABLA EMPLEADOS
 # ─────────────────────────────────────────
 class Empleado(models.Model):
-    usuario       = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    usuario = models.OneToOneField(
+        Usuario, 
+        on_delete=models.CASCADE,
+        null=True,      # ← agrega esto
+        blank=True      # ← agrega esto
+    )
     nombre        = models.CharField(max_length=100)
     telefono      = models.CharField(max_length=20)
     fecha_ingreso = models.DateField(auto_now_add=True)

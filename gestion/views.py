@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages  
 from .models import Cliente, Vehiculo, Servicio, Factura
+from .models import Cliente, Vehiculo, Servicio, Factura, Empleado
 from django.utils import timezone
 from django.db.models import Sum
+
 
 def dashboard(request):
     hoy = timezone.now().date()
@@ -113,3 +115,46 @@ def eliminar_vehiculo(request, id):
     vehiculo.delete()
     messages.success(request, '🗑️ Vehículo eliminado exitosamente')
     return redirect('lista_vehiculos')
+
+
+
+# ─────────────────────────────────────────
+# EMPLEADOS
+# ─────────────────────────────────────────
+def lista_empleados(request):
+    empleados = Empleado.objects.all()
+    return render(request, 'gestion/empleados.html', {'empleados': empleados})
+
+
+def nuevo_empleado(request):
+    if request.method == 'POST':
+        nombre    = request.POST['nombre']
+        telefono  = request.POST['telefono']
+        porcentaje_comision = request.POST['porcentaje_comision']
+        Empleado.objects.create(
+            nombre=nombre,
+            telefono=telefono,
+            porcentaje_comision=porcentaje_comision
+        )
+        messages.success(request, '✅ Empleado creado exitosamente')
+        return redirect('lista_empleados')
+    return render(request, 'gestion/nuevo_empleado.html')
+
+
+def editar_empleado(request, id):
+    empleado = get_object_or_404(Empleado, id=id)
+    if request.method == 'POST':
+        empleado.nombre              = request.POST['nombre']
+        empleado.telefono            = request.POST['telefono']
+        empleado.porcentaje_comision = request.POST['porcentaje_comision']
+        empleado.save()
+        messages.success(request, '✅ Empleado actualizado exitosamente')
+        return redirect('lista_empleados')
+    return render(request, 'gestion/editar_empleado.html', {'empleado': empleado})
+
+
+def eliminar_empleado(request, id):
+    empleado = get_object_or_404(Empleado, id=id)
+    empleado.delete()
+    messages.success(request, '🗑️ Empleado eliminado exitosamente')
+    return redirect('lista_empleados')

@@ -15,4 +15,10 @@ urlpatterns = [
     path('vehiculos/nuevo/',                views.nuevo_vehiculo,   name='nuevo_vehiculo'),
     path('vehiculos/editar/<int:id>/',      views.editar_vehiculo,  name='editar_vehiculo'),
     path('vehiculos/eliminar/<int:id>/',    views.eliminar_vehiculo,name='eliminar_vehiculo'),
+
+    # Empleados
+    path('empleados/',                    views.lista_empleados,  name='lista_empleados'),
+    path('empleados/nuevo/',              views.nuevo_empleado,   name='nuevo_empleado'),
+    path('empleados/editar/<int:id>/',    views.editar_empleado,  name='editar_empleado'),
+    path('empleados/eliminar/<int:id>/',  views.eliminar_empleado,name='eliminar_empleado'),
 ]
