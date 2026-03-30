@@ -350,8 +350,8 @@ def nueva_factura(request):
     })
 
 
-def detalle_factura(request, id):
-    factura  = get_object_or_404(Factura, id=id)
+def detalle_factura(request, numero):
+    factura  = get_object_or_404(Factura, numero=numero)  # ← numero en vez de id
     detalles = DetalleFactura.objects.filter(factura=factura)
     return render(request, 'gestion/detalle_factura.html', {
         'factura':  factura,
@@ -359,8 +359,8 @@ def detalle_factura(request, id):
     })
 
 
-def anular_factura(request, id):
-    factura        = get_object_or_404(Factura, id=id)
+def anular_factura(request, numero):
+    factura        = get_object_or_404(Factura, numero=numero)  # ← numero en vez de id
     factura.estado = 'anulada'
     factura.save()
     messages.success(request, '🗑️ Factura anulada exitosamente')
