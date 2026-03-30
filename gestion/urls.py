@@ -21,4 +21,18 @@ urlpatterns = [
     path('empleados/nuevo/',              views.nuevo_empleado,   name='nuevo_empleado'),
     path('empleados/editar/<int:id>/',    views.editar_empleado,  name='editar_empleado'),
     path('empleados/eliminar/<int:id>/',  views.eliminar_empleado,name='eliminar_empleado'),
+
+    # Tipos de Servicio
+    path('tipos-servicio/',                     views.lista_tipos_servicio,   name='lista_tipos_servicio'),
+    path('tipos-servicio/nuevo/',               views.nuevo_tipo_servicio,    name='nuevo_tipo_servicio'),
+    path('tipos-servicio/editar/<int:id>/',     views.editar_tipo_servicio,   name='editar_tipo_servicio'),
+    path('tipos-servicio/eliminar/<int:id>/',   views.eliminar_tipo_servicio, name='eliminar_tipo_servicio'),
+
+    # Servicios
+    path('servicios/',                    views.lista_servicios,  name='lista_servicios'),
+    path('servicios/nuevo/',              views.nuevo_servicio,   name='nuevo_servicio'),
+    path('servicios/editar/<int:id>/',    views.editar_servicio,  name='editar_servicio'),
+    path('servicios/eliminar/<int:id>/',  views.eliminar_servicio,name='eliminar_servicio'),
 ]
+
+

@@ -1,0 +1,76 @@
+{% extends 'gestion/base.html' %}
+{% block titulo %}Editar Servicio{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>✏️ Editar Servicio</h2>
+    <a href="{% url 'lista_servicios' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left me-2"></i>Volver
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width: 600px;">
+    <div class="card-body p-4">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Vehículo</label>
+                <select name="vehiculo" class="form-select" required>
+                    {% for vehiculo in vehiculos %}
+                    <option value="{{ vehiculo.id }}"
+                        {% if vehiculo.id == servicio.vehiculo.id %}selected{% endif %}>
+                        {{ vehiculo.placa }} - {{ vehiculo.marca }}
+                        ({{ vehiculo.cliente.nombre }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Empleado</label>
+                <select name="empleado" class="form-select" required>
+                    {% for empleado in empleados %}
+                    <option value="{{ empleado.id }}"
+                        {% if empleado.id == servicio.empleado.id %}selected{% endif %}>
+                        {{ empleado.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tipo de Servicio</label>
+                <select name="tipo_servicio" class="form-select" required>
+                    {% for tipo in tipos %}
+                    <option value="{{ tipo.id }}"
+                        {% if tipo.id == servicio.tipo_servicio.id %}selected{% endif %}>
+                        {{ tipo.nombre }} - ${{ tipo.precio }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Estado</label>
+                <select name="estado" class="form-select" required>
+                    <option value="pendiente"  {% if servicio.estado == 'pendiente'  %}selected{% endif %}>Pendiente</option>
+                    <option value="en_proceso" {% if servicio.estado == 'en_proceso' %}selected{% endif %}>En Proceso</option>
+                    <option value="listo"      {% if servicio.estado == 'listo'      %}selected{% endif %}>Listo</option>
+                    <option value="entregado"  {% if servicio.estado == 'entregado'  %}selected{% endif %}>Entregado</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Observaciones</label>
+                <textarea name="observaciones" class="form-control"
+                          rows="3">{{ servicio.observaciones }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100">
+                <i class="bi bi-save me-2"></i>Actualizar Servicio
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

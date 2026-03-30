@@ -1,0 +1,96 @@
+{% extends 'gestion/base.html' %}
+{% block titulo %}Servicios{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>🧼 Servicios</h2>
+    <a href="{% url 'nuevo_servicio' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-2"></i>Nuevo Servicio
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Vehículo</th>
+                    <th>Cliente</th>
+                    <th>Servicio</th>
+                    <th>Empleado</th>
+                    <th>Precio</th>
+                    <th>Comisión</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for servicio in servicios %}
+                <tr>
+                    <td>{{ servicio.id }}</td>
+                    <td>
+                        <span class="badge bg-dark">
+                            {{ servicio.vehiculo.placa }}
+                        </span>
+                    </td>
+                    <td>{{ servicio.vehiculo.cliente.nombre }}</td>
+                    <td>{{ servicio.tipo_servicio.nombre }}</td>
+                    <td>{{ servicio.empleado.nombre }}</td>
+                    <td>${{ servicio.precio }}</td>
+                    <td>${{ servicio.comision }}</td>
+                    <td>
+                        {% if servicio.estado == 'pendiente' %}
+                        <span class="badge bg-warning text-dark">Pendiente</span>
+                        {% elif servicio.estado == 'en_proceso' %}
+                        <span class="badge bg-primary">En Proceso</span>
+                        {% elif servicio.estado == 'listo' %}
+                        <span class="badge bg-success">Listo</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Entregado</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ servicio.fecha|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'editar_servicio' servicio.id %}"
+                           class="btn btn-sm btn-warning">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <button onclick="confirmarEliminar('{% url 'eliminar_servicio' servicio.id %}')"
+                                class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" class="text-center text-muted">
+                        No hay servicios registrados aún
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function confirmarEliminar(url) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esta acción no se puede deshacer',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+</script>
+{% endblock %}

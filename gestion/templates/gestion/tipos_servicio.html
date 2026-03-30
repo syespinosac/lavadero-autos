@@ -1,0 +1,85 @@
+{% extends 'gestion/base.html' %}
+{% block titulo %}Tipos de Servicio{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>🧹 Tipos de Servicio</h2>
+    <a href="{% url 'nuevo_tipo_servicio' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-2"></i>Nuevo Tipo
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tipo in tipos %}
+                <tr>
+                    <td>{{ tipo.id }}</td>
+                    <td><strong>{{ tipo.nombre }}</strong></td>
+                    <td>{{ tipo.descripcion }}</td>
+                    <td>
+                        <span class="badge bg-success">
+                            ${{ tipo.precio }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if tipo.activo %}
+                        <span class="badge bg-success">Activo</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'editar_tipo_servicio' tipo.id %}"
+                           class="btn btn-sm btn-warning">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <button onclick="confirmarEliminar('{% url 'eliminar_tipo_servicio' tipo.id %}')"
+                                class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">
+                        No hay tipos de servicio registrados aún
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function confirmarEliminar(url) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esta acción no se puede deshacer',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+</script>
+
+{% endblock %}
