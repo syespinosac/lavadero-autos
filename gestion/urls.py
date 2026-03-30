@@ -33,6 +33,12 @@ urlpatterns = [
     path('servicios/nuevo/',              views.nuevo_servicio,   name='nuevo_servicio'),
     path('servicios/editar/<int:id>/',    views.editar_servicio,  name='editar_servicio'),
     path('servicios/eliminar/<int:id>/',  views.eliminar_servicio,name='eliminar_servicio'),
+
+    # Facturas
+    path('facturas/',                   views.lista_facturas,  name='lista_facturas'),
+    path('facturas/nueva/',             views.nueva_factura,   name='nueva_factura'),
+    path('facturas/detalle/<int:id>/',  views.detalle_factura, name='detalle_factura'),
+    path('facturas/anular/<int:id>/',   views.anular_factura,  name='anular_factura'),
 ]
 
 

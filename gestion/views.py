@@ -5,6 +5,8 @@ from .models import Cliente, Vehiculo, Servicio, Factura, Empleado
 from .models import Cliente, Vehiculo, Servicio, Factura, Empleado, TipoServicio
 from django.utils import timezone
 from django.db.models import Sum
+from .models import Cliente, Vehiculo, Servicio, Factura, Empleado, TipoServicio, DetalleFactura
+from decimal import Decimal
 
 
 def dashboard(request):
@@ -279,3 +281,87 @@ def eliminar_servicio(request, id):
     servicio.delete()
     messages.success(request, '🗑️ Servicio eliminado exitosamente')
     return redirect('lista_servicios')
+
+
+
+# ─────────────────────────────────────────
+# FACTURAS
+# ─────────────────────────────────────────
+def lista_facturas(request):
+    facturas = Factura.objects.all().order_by('-fecha')
+    return render(request, 'gestion/facturas.html', {'facturas': facturas})
+
+
+def nueva_factura(request):
+    clientes  = Cliente.objects.all()
+    empleados = Empleado.objects.all()
+    servicios = Servicio.objects.filter(estado='listo')
+
+    if request.method == 'POST':
+        cliente_id  = request.POST['cliente']
+        empleado_id = request.POST['empleado']
+        metodo_pago = request.POST['metodo_pago']
+        servicios_ids = request.POST.getlist('servicios')
+
+        # Calcular subtotal
+        subtotal = 0
+        for sid in servicios_ids:
+            s = Servicio.objects.get(id=sid)
+            subtotal += s.precio
+
+        impuesto = subtotal * Decimal('0.19')
+        total    = subtotal + impuesto
+
+        # Crear la factura
+        factura = Factura.objects.create(
+            cliente_id  = cliente_id,
+            empleado_id = empleado_id,
+            metodo_pago = metodo_pago,
+            subtotal    = subtotal,
+            impuesto    = impuesto,
+            total       = total,
+            estado      = 'pagada',
+        )
+
+        # Crear los detalles
+        for sid in servicios_ids:
+            s = Servicio.objects.get(id=sid)
+            DetalleFactura.objects.create(
+                factura         = factura,
+                tipo_servicio   = s.tipo_servicio,
+                empleado        = s.empleado,
+                vehiculo        = s.vehiculo,
+                cantidad        = 1,
+                precio_unitario = s.precio,
+                subtotal        = s.precio,
+                comision        = s.comision,
+            )
+            # Marcar servicio como entregado
+            s.estado = 'entregado'
+            s.save()
+
+        messages.success(request, '✅ Factura creada exitosamente')
+        return redirect('lista_facturas')
+
+    return render(request, 'gestion/nueva_factura.html', {
+        'clientes':  clientes,
+        'empleados': empleados,
+        'servicios': servicios,
+    })
+
+
+def detalle_factura(request, id):
+    factura  = get_object_or_404(Factura, id=id)
+    detalles = DetalleFactura.objects.filter(factura=factura)
+    return render(request, 'gestion/detalle_factura.html', {
+        'factura':  factura,
+        'detalles': detalles,
+    })
+
+
+def anular_factura(request, id):
+    factura        = get_object_or_404(Factura, id=id)
+    factura.estado = 'anulada'
+    factura.save()
+    messages.success(request, '🗑️ Factura anulada exitosamente')
+    return redirect('lista_facturas')

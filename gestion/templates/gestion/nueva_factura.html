@@ -1,0 +1,80 @@
+{% extends 'gestion/base.html' %}
+{% block titulo %}Nueva Factura{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>➕ Nueva Factura</h2>
+    <a href="{% url 'lista_facturas' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left me-2"></i>Volver
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width: 700px;">
+    <div class="card-body p-4">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Cliente</label>
+                <select name="cliente" class="form-select" required>
+                    <option value="">Selecciona un cliente...</option>
+                    {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Empleado que atiende</label>
+                <select name="empleado" class="form-select" required>
+                    <option value="">Selecciona un empleado...</option>
+                    {% for empleado in empleados %}
+                    <option value="{{ empleado.id }}">{{ empleado.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Servicios listos para facturar</label>
+                {% if servicios %}
+                <div class="border rounded p-3">
+                    {% for servicio in servicios %}
+                    <div class="form-check mb-2">
+                        <input type="checkbox" name="servicios"
+                               value="{{ servicio.id }}"
+                               class="form-check-input"
+                               id="servicio_{{ servicio.id }}">
+                        <label class="form-check-label" for="servicio_{{ servicio.id }}">
+                            <strong>{{ servicio.vehiculo.placa }}</strong> —
+                            {{ servicio.tipo_servicio.nombre }} —
+                            ${{ servicio.precio }}
+                            <span class="text-muted">({{ servicio.vehiculo.cliente.nombre }})</span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    No hay servicios con estado "Listo" para facturar.
+                    <a href="{% url 'lista_servicios' %}">Ir a Servicios</a>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Método de Pago</label>
+                <select name="metodo_pago" class="form-select" required>
+                    <option value="efectivo">Efectivo</option>
+                    <option value="tarjeta">Tarjeta</option>
+                    <option value="transferencia">Transferencia</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-receipt me-2"></i>Generar Factura
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

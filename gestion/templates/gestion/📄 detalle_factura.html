@@ -1,0 +1,101 @@
+{% extends 'gestion/base.html' %}
+{% block titulo %}Detalle Factura #{{ factura.numero }}{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>🧾 Factura #{{ factura.numero }}</h2>
+    <a href="{% url 'lista_facturas' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left me-2"></i>Volver
+    </a>
+</div>
+
+<div class="row">
+    <!-- Info factura -->
+    <div class="col-md-6 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <i class="bi bi-info-circle me-2"></i>Información
+            </div>
+            <div class="card-body">
+                <p><strong>Cliente:</strong> {{ factura.cliente.nombre }}</p>
+                <p><strong>Empleado:</strong> {{ factura.empleado.nombre }}</p>
+                <p><strong>Fecha:</strong> {{ factura.fecha|date:"d/m/Y H:i" }}</p>
+                <p><strong>Método de pago:</strong> {{ factura.get_metodo_pago_display }}</p>
+                <p>
+                    <strong>Estado:</strong>
+                    {% if factura.estado == 'pagada' %}
+                    <span class="badge bg-success">Pagada</span>
+                    {% elif factura.estado == 'pendiente' %}
+                    <span class="badge bg-warning text-dark">Pendiente</span>
+                    {% else %}
+                    <span class="badge bg-danger">Anulada</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Totales -->
+    <div class="col-md-6 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <i class="bi bi-calculator me-2"></i>Totales
+            </div>
+            <div class="card-body">
+                <p class="d-flex justify-content-between">
+                    <span>Subtotal:</span>
+                    <strong>${{ factura.subtotal }}</strong>
+                </p>
+                <p class="d-flex justify-content-between">
+                    <span>IVA 19%:</span>
+                    <strong>${{ factura.impuesto }}</strong>
+                </p>
+                <hr>
+                <p class="d-flex justify-content-between fs-5">
+                    <span><strong>Total:</strong></span>
+                    <strong class="text-success">${{ factura.total }}</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detalle servicios -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-dark text-white">
+        <i class="bi bi-list-check me-2"></i>Servicios Facturados
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Vehículo</th>
+                    <th>Servicio</th>
+                    <th>Empleado</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Subtotal</th>
+                    <th>Comisión</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detalle in detalles %}
+                <tr>
+                    <td>
+                        <span class="badge bg-dark">
+                            {{ detalle.vehiculo.placa }}
+                        </span>
+                    </td>
+                    <td>{{ detalle.tipo_servicio.nombre }}</td>
+                    <td>{{ detalle.empleado.nombre }}</td>
+                    <td>{{ detalle.cantidad }}</td>
+                    <td>${{ detalle.precio_unitario }}</td>
+                    <td>${{ detalle.subtotal }}</td>
+                    <td>${{ detalle.comision }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
