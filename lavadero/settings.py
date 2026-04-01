@@ -125,3 +125,24 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.INFO:    'info',
 }
+
+
+import os
+import dj_database_url
+
+# Seguridad
+SECRET_KEY = os.environ.get('SECRET_KEY', 'tu-secret-key-local')
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+ALLOWED_HOSTS = ['*']
+
+# Base de datos — usa PostgreSQL en Railway, SQLite local
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
+
+# Archivos estáticos
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
