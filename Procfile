@@ -1,1 +1,1 @@
-web: gunicorn lavadero.wsgi
+web: python manage.py migrate && gunicorn lavadero.wsgi
