@@ -146,3 +146,8 @@ if DATABASE_URL:
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://web-production-b50b5.up.railway.app',
+]
