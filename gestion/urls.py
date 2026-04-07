@@ -39,6 +39,8 @@ urlpatterns = [
     path('facturas/nueva/',             views.nueva_factura,   name='nueva_factura'),
     path('facturas/detalle/<int:numero>/',  views.detalle_factura, name='detalle_factura'),
     path('facturas/anular/<int:numero>/',   views.anular_factura,  name='anular_factura'),
+
+    path('facturas/ticket/<int:numero>/', views.ticket_factura, name='ticket_factura'),
 ]
 
 

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket #{{ factura.numero }}</title>
+    <style>
+        /* ─── Reset ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .ticket {
+            background: white;
+            width: 80mm;
+            padding: 8mm;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        /* ─── Cabecera ─── */
+        .header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            font-size: 11px;
+            color: #555;
+        }
+
+        /* ─── Separador ─── */
+        .separador {
+            border: none;
+            border-top: 1px dashed #000;
+            margin: 6px 0;
+        }
+
+        /* ─── Info factura ─── */
+        .info {
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .info p {
+            margin: 2px 0;
+        }
+
+        .info span {
+            font-weight: bold;
+        }
+
+        /* ─── Tabla servicios ─── */
+        table {
+            width: 100%;
+            font-size: 11px;
+            border-collapse: collapse;
+            margin: 6px 0;
+        }
+
+        table th {
+            text-align: left;
+            font-size: 10px;
+            border-bottom: 1px solid #000;
+            padding: 2px 0;
+        }
+
+        table td {
+            padding: 3px 0;
+            vertical-align: top;
+        }
+
+        table td:last-child {
+            text-align: right;
+        }
+
+        table th:last-child {
+            text-align: right;
+        }
+
+        /* ─── Totales ─── */
+        .totales {
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .totales p {
+            display: flex;
+            justify-content: space-between;
+            margin: 2px 0;
+        }
+
+        .totales .total-final {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        /* ─── Pie ─── */
+        .footer {
+            text-align: center;
+            font-size: 10px;
+            margin-top: 8px;
+            color: #555;
+        }
+
+        /* ─── Botones (solo pantalla) ─── */
+        .botones {
+            text-align: center;
+            margin-top: 12px;
+            width: 80mm;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            margin: 4px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-print {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .btn-back {
+            background: #6c757d;
+            color: white;
+        }
+
+        /* ─── Impresión ─── */
+        @media print {
+    body {
+        background: white;
+        padding: 0;
+        margin: 0;
+    }
+
+    .ticket {
+        box-shadow: none;
+        width: 72mm;      /* ← 80mm menos márgenes */
+        padding: 2mm;
+        margin: 0;
+    }
+
+    .botones {
+        display: none !important;
+    }
+
+        /* Evita cortes de página */
+        table { page-break-inside: avoid; }
+        .totales { page-break-inside: avoid; }
+    }
+    </style>
+</head>
+
+
+<body>
+
+<div class="ticket">
+
+    <!-- CABECERA -->
+    <div class="header">
+        <h1>🚗 Lavadero</h1>
+        <p>Sistema de Gestión</p>
+        <p>Tel: 3001234567</p>
+    </div>
+
+    <hr class="separador">
+
+    <!-- INFO FACTURA -->
+    <div class="info">
+        <p><span>Factura #:</span> {{ factura.numero }}</p>
+        <p><span>Fecha:</span> {{ factura.fecha|date:"d/m/Y H:i" }}</p>
+        <p><span>Cliente:</span> {{ factura.cliente.nombre }}</p>
+        <p><span>Atendido por:</span> {{ factura.empleado.nombre }}</p>
+        <p><span>Pago:</span> {{ factura.get_metodo_pago_display }}</p>
+    </div>
+
+    <hr class="separador">
+
+    <!-- SERVICIOS -->
+    <table>
+        <thead>
+            <tr>
+                <th>Servicio</th>
+                <th>Placa</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in detalles %}
+            <tr>
+                <td>{{ detalle.tipo_servicio.nombre }}</td>
+                <td>{{ detalle.vehiculo.placa }}</td>
+                <td>${{ detalle.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr class="separador">
+
+    <!-- TOTALES -->
+    <div class="totales">
+        <p>
+            <span>Subtotal:</span>
+            <span>${{ factura.subtotal }}</span>
+        </p>
+        <p>
+            <span>IVA 19%:</span>
+            <span>${{ factura.impuesto }}</span>
+        </p>
+        <p class="total-final">
+            <span>TOTAL:</span>
+            <span>${{ factura.total }}</span>
+        </p>
+    </div>
+
+    <hr class="separador">
+
+    <!-- PIE -->
+    <div class="footer">
+        <p>¡Gracias por su visita!</p>
+        <p>Vuelva pronto 🚗</p>
+        <p>{{ factura.fecha|date:"d/m/Y H:i" }}</p>
+    </div>
+
+</div>
+
+<!-- BOTONES (no se imprimen) -->
+<div class="botones">
+    <button class="btn btn-print" onclick="window.print()">
+        🖨️ Imprimir Ticket
+    </button>
+    <button class="btn btn-back" onclick="window.history.back()">
+        ← Volver
+    </button>
+</div>
+
+</body>
+</html>

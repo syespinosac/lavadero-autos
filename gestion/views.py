@@ -365,3 +365,14 @@ def anular_factura(request, numero):
     factura.save()
     messages.success(request, '🗑️ Factura anulada exitosamente')
     return redirect('lista_facturas')
+
+# ─────────────────────────────────────────
+# TICKET TÉRMICO
+# ─────────────────────────────────────────
+def ticket_factura(request, numero):
+    factura  = get_object_or_404(Factura, numero=numero)
+    detalles = DetalleFactura.objects.filter(factura=factura)
+    return render(request, 'gestion/ticket_factura.html', {
+        'factura':  factura,
+        'detalles': detalles,
+    })

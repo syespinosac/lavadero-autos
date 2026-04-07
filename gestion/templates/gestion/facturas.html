@@ -48,18 +48,27 @@
                         <span class="badge bg-danger">Anulada</span>
                         {% endif %}
                     </td>
+                    
                     <td>
-                        <a href="{% url 'detalle_factura' factura.numero %}"
-                           class="btn btn-sm btn-info">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                        {% if factura.estado != 'anulada' %}
-                        <button onclick="confirmarAnular('{% url 'anular_factura' factura.numero %}')"
-                                class="btn btn-sm btn-danger">
-                            <i class="bi bi-x-circle"></i>
-                        </button>
-                        {% endif %}
-                    </td>
+                            <!-- Botón ver detalle -->
+                            <a href="{% url 'detalle_factura' factura.numero %}"
+                            class="btn btn-sm btn-info">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <!-- Botón ticket ← nuevo -->
+                            <a href="{% url 'ticket_factura' factura.numero %}"
+                            class="btn btn-sm btn-success"
+                            target="_blank">
+                                <i class="bi bi-printer"></i>
+                            </a>
+                            <!-- Botón anular -->
+                            {% if factura.estado != 'anulada' %}
+                            <button onclick="confirmarAnular('{% url 'anular_factura' factura.numero %}')"
+                                    class="btn btn-sm btn-danger">
+                                <i class="bi bi-x-circle"></i>
+                            </button>
+                            {% endif %}
+                        </td>
                 </tr>
                 {% empty %}
                 <tr>
